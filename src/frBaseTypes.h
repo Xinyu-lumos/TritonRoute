@@ -256,7 +256,6 @@ namespace fr {
 
   typedef bg::model::d2::point_xy<frCoord, bg::cs::cartesian>  point_t;
   typedef bg::model::box<point_t>                              box_t;
-  typedef bg::model::segment<point_t>                          segment_t;
 
   class frBox;
 

@@ -10,9 +10,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 
+# check_ipo_supported是CheckIPOSupported模块提供的一个函数，用来检测当前编译器是否支持IPO。
 include(CheckIPOSupported)
 check_ipo_supported(RESULT ipo_supported OUTPUT error)
 
+#check compiler version
 if (CMAKE_COMPILER_IS_GNUCC AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7)
   message(FATAL_ERROR "TritonRoute requires GCC 7 and above! \nuse -DCMAKE_CXX_COMPILER to assign your compiler path")
 endif()
@@ -165,9 +167,8 @@ set (FLEXROUTE_HEADER
   ${FLEXROUTE_HOME}/src/rp/FlexRP.h
   )
 
-############################################################
+
 # Create a library
-############################################################
 add_library( flexroutelib
   ${FLEXROUTE_SRC}
 )
@@ -192,9 +193,8 @@ target_link_libraries( flexroutelib
   ZLIB::ZLIB
 )
 
-############################################################
+
 # Create an executable
-############################################################
 add_executable( TritonRoute
   ${FLEXROUTE_HOME}/src/main.cpp
 )
@@ -211,17 +211,14 @@ target_link_libraries( TritonRoute
   flexroutelib
   )
 
-############################################################
-# Install
-############################################################
 
+# Install
 install(FILES ${FLEXROUTE_HEADER} DESTINATION include)
 install(TARGETS TritonRoute DESTINATION bin)
 install(TARGETS TritonRoute DESTINATION lib)
 
-############################################################
+
 # Compiler flags
-############################################################
 # Todo: add -Wextra and cleanup warnings
 target_compile_options( TritonRoute
   PRIVATE
@@ -229,10 +226,9 @@ target_compile_options( TritonRoute
   $<$<CXX_COMPILER_ID:AppleClang>:-Wall -pedantic -Wcast-qual -Wredundant-decls -Wformat-security>
   $<$<CXX_COMPILER_ID:Clang>:-Wall -pedantic -Wcast-qual -Wredundant-decls -Wformat-security>
   )
-
-############################################################
+  
+#enable_testing()
 # Unit testing
-############################################################
 enable_testing()
 
 add_executable(trTest
@@ -260,10 +256,8 @@ endif()
 
 add_test(NAME trTest COMMAND trTest)
 
-############################################################
-# VTune ITT API
-############################################################
 
+# VTune ITT API
 if (VTune_FOUND)
   target_compile_definitions( flexroutelib
     PUBLIC
